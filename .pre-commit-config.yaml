@@ -1,0 +1,65 @@
+# Pre-commit Security Hooks - DemoAI
+# Para instalar: pip install pre-commit && pre-commit install
+
+repos:
+  # Python Security Scanning
+  - repo: https://github.com/pycqa/bandit
+    rev: '1.7.5'
+    hooks:
+      - id: bandit
+        name: "🔒 Bandit Security Scanner"
+        args: ['-r', '.', '--format', 'custom', '--msg-template', '🚨 {severity}: {test_id}[{test_name}] {filename}:{line_number} - {msg}']
+        exclude: '__pycache__'
+
+  # Secret Detection
+  - repo: https://github.com/gitguardian/ggshield
+    rev: v1.21.0
+    hooks:
+      - id: ggshield
+        name: "🔐 Secret Scanner"
+        language: python
+        stages: [commit]
+        pass_filenames: false
+        
+  # Dependency Scanning
+  - repo: local
+    hooks:
+      - id: safety-check
+        name: "🛡️ Dependency Security Check"
+        entry: bash
+        language: system
+        args: ['-c', 'pip install safety > /dev/null 2>&1; safety check --json || (echo "🚨 Vulnerabilidades encontradas em dependências!" && exit 1)']
+        pass_filenames: false
+        
+  # Custom Security Validation
+  - repo: local
+    hooks:
+      - id: custom-security-check
+        name: "🎯 Custom Security Validation"
+        entry: python
+        language: system
+        args: ['-c', 'import re, sys; content = open(sys.argv[1]).read(); vulnerabilities = []; 
+               # Command Injection Check
+               if re.search(r"subprocess\.\w+\(.*shell=True.*\)", content): vulnerabilities.append("Command Injection detectado!");
+               # Hardcoded Secret Check  
+               if re.search(r"SECRET_KEY\s*=\s*["\'][\w-]+["\']", content): vulnerabilities.append("Hardcoded secret detectado!");
+               # JWT without verification
+               if re.search(r"verify_signature.*False", content): vulnerabilities.append("JWT sem verificação detectado!");
+               # Print vulnerabilities and exit
+               [print(f"🚨 {v}") for v in vulnerabilities];
+               sys.exit(1 if vulnerabilities else 0)']
+        files: '\.py$'
+        
+  # Code Quality (Security Related)
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        name: "🎨 Code Formatter"
+        
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        name: "📋 Code Linter"
+        args: ['--max-line-length=88', '--extend-ignore=E203']
