@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "sonarsource.sonarlint-vscode",
+        "gitguardian.gitguardian-vscode",
+        "snyk-security.snyk-vulnerability-scanner",
+        "ms-python.bandit",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions"
+    ]
+}

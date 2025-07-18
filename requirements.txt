@@ -1,0 +1,16 @@
+# Web Framework
+flask==3.0.0
+requests==2.31.0
+
+# JWT handling (vulnerable version for demonstration)
+PyJWT==2.8.0
+
+# Security scanning tools (development dependencies)
+bandit==1.7.5
+safety==2.3.4
+semgrep==1.52.0
+pre-commit==3.6.0
+
+# Code formatting
+black==23.12.1
+isort==5.13.2

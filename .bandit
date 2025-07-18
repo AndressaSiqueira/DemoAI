@@ -1,0 +1,44 @@
+# Bandit configuration file
+[bandit]
+exclude_dirs = [
+    "tests",
+    "venv",
+    ".venv",
+    "env",
+    ".env",
+    "node_modules",
+    ".git"
+]
+
+# Test IDs to skip (comma-separated)
+# skips = B101,B601
+
+# Test IDs to include (comma-separated)
+# tests = B201,B301
+
+# Confidence level (HIGH, MEDIUM, LOW, UNDEFINED)
+# confidence = MEDIUM
+
+# Severity level (HIGH, MEDIUM, LOW, UNDEFINED)
+# severity = MEDIUM
+
+# Output format (csv, json, txt, yaml, xml)
+# format = json
+
+# Output file
+# output = bandit-report.json
+
+# Recursive scan
+recursive = true
+
+# Aggregate duplicate issues
+aggregate = duplicate
+
+# Number of lines to include in the report
+context_lines = 3
+
+# Show only the issues found, no summary
+quiet = false
+
+# Show debug information
+verbose = false
