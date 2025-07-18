@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinheria Premium - Loja de Vinhos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #722f37, #8b4513);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo::before {
+            content: "🍺";
+            margin-right: 10px;
+        }
+
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-button {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-button:hover {
+            background: white;
+            color: #722f37;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23722f37" width="1200" height="600"/><path fill="%23ffffff" opacity="0.1" d="M0,400 Q300,200 600,400 T1200,400 V600 H0 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: #f8f9fa;
+            border: 2px solid #722f37;
+            color: #722f37;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #722f37;
+            color: white;
+        }
+
+        .products {
+            padding: 60px 0;
+        }
+
+        .products h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: #722f37;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            background: linear-gradient(45deg, #722f37, #8b4513);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #722f37;
+        }
+
+        .product-type {
+            color: #666;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .product-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #722f37;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #722f37;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #5a252b;
+        }
+
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .cart-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #722f37;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #722f37;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #722f37;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: #722f37;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background: #5a252b;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Vinheria Premium</div>
+                <div class="cart-info">
+                    <button class="cart-button" onclick="toggleCart()">
+                        🛒 Carrinho (<span id="cart-count">0</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Vinhos Premium Selecionados</h1>
+            <p>Descubra nossa coleção exclusiva de vinhos nacionais e importados, cuidadosamente selecionados para os verdadeiros apreciadores.</p>
+        </div>
+    </section>
+
+    <section class="filters">
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterProducts('all')">Todos</button>
+                <button class="filter-btn" onclick="filterProducts('tinto')">Tintos</button>
+                <button class="filter-btn" onclick="filterProducts('branco')">Brancos</button>
+                <button class="filter-btn" onclick="filterProducts('rose')">Rosés</button>
+                <button class="filter-btn" onclick="filterProducts('espumante')">Espumantes</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="products">
+        <div class="container">
+            <h2>Nossos Vinhos</h2>
+            <div class="product-grid" id="product-grid">
+                <!-- Os produtos serão inseridos aqui via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3>Seu Carrinho</h3>
+                <button class="close-cart" onclick="toggleCart()">×</button>
+            </div>
+            <div id="cart-items">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="cart-total">
+                Total: R$ <span id="cart-total">0,00</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Vinheria Premium. Todos os direitos reservados.</p>
+            <p>Aprecie com moderação. Venda proibida para menores de 18 anos.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dados dos produtos
+        const products = [
+            {
+                id: 1,
+                name: "Château Margaux Reserve",
+                type: "tinto",
+                description: "Vinho tinto francês encorpado com notas de frutas vermelhas e especiarias.",
+                price: 89.90,
+                image: "🍷"
+            },
+            {
+                id: 2,
+                name: "Sauvignon Blanc Premium",
+                type: "branco",
+                description: "Vinho branco seco com aroma cítrico e final refrescante.",
+                price: 45.90,
+                image: "🥂"
+            },
+            {
+                id: 3,
+                name: "Cabernet Sauvignon",
+                type: "tinto",
+                description: "Vinho tinto nacional com taninos macios e sabor marcante.",
+                price: 32.90,
+                image: "🍷"
+            },
+            {
+                id: 4,
+                name: "Rosé da Provence",
+                type: "rose",
+                description: "Vinho rosé delicado com notas florais e frescor natural.",
+                price: 52.90,
+                image: "🌹"
+            },
+            {
+                id: 5,
+                name: "Champagne Brut",
+                type: "espumante",
+                description: "Espumante francês tradicional, ideal para celebrações especiais.",
+                price: 128.90,
+                image: "🥂"
+            },
+            {
+                id: 6,
+                name: "Pinot Noir Reserva",
+                type: "tinto",
+                description: "Vinho tinto elegante com corpo médio e final prolongado.",
+                price: 67.90,
+                image: "🍷"
+            },
+            {
+                id: 7,
+                name: "Chardonnay Oak",
+                type: "branco",
+                description: "Vinho branco amadurecido em carvalho com notas amanteigadas.",
+                price: 58.90,
+                image: "🥂"
+            },
+            {
+                id: 8,
+                name: "Prosecco Italiano",
+                type: "espumante",
+                description: "Espumante italiano leve e refrescante, perfeito para aperitivos.",
+                price: 38.90,
+                image: "🥂"
+            },
+            {
+                id: 9,
+                name: "Malbec Argentino",
+                type: "tinto",
+                description: "Vinho tinto argentino intenso com notas de frutas escuras.",
+                price: 41.90,
+                image: "🍷"
+            }
+        ];
+
+        // Carrinho de compras
+        // ...existing code...
+
+        // Renderizar produtos
+        function renderProducts(productsToRender = products) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            productsToRender.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-type">${product.type.charAt(0).toUpperCase() + product.type.slice(1)}</div>
+                        <div class="product-description">${product.description}</div>
+                        <div class="product-price">R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            Adicionar ao Carrinho
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Filtrar produtos
+        function filterProducts(type) {
+            // Atualizar botões ativos
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filtrar e renderizar produtos
+            const filteredProducts = type === 'all' 
+                ? products 
+                : products.filter(product => product.type === type);
+            
+            renderProducts(filteredProducts);
+        }
+
+        // Adicionar ao carrinho
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartDisplay();
+            
+            // Feedback visual
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Adicionado!';
+            button.style.background = '#28a745';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#722f37';
+            }, 1000);
+        }
+
+        // Atualizar exibição do carrinho
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cart-count');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            // Atualizar contador
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+
+            // Atualizar itens do carrinho
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <small>Quantidade: ${item.quantity}</small>
+                    </div>
+                    <div>
+                        <span>R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+                        <button onclick="removeFromCart(${item.id})" style="margin-left: 10px; background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">
+                            Remover
+                        </button>
+                    </div>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+
+            // Atualizar total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = total.toFixed(2).replace('.', ',');
+        }
+
+        // Remover do carrinho
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+        }
+
+        // Alternar modal do carrinho
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Finalizar compra
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const items = cart.map(item => `${item.name} (${item.quantity}x)`).join(', ');
+            
+            alert(`Compra realizada com sucesso!\n\nItens: ${items}\nTotal: R$ ${total.toFixed(2).replace('.', ',')}\n\nObrigado por escolher a Vinheria Premium!`);
+            
+            // Limpar carrinho
+            cart = [];
+            updateCartDisplay();
+            toggleCart();
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('cart-modal');
+            if (event.target === modal) {
+                toggleCart();
+            }
+        }
+
+        // Inicializar aplicação
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+        });
+    </script>
+</body>
+</html>
+"@ | Out-File -FilePath "index.html" -Encoding UTF8

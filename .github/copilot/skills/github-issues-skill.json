@@ -1,0 +1,21 @@
+{
+  "name": "github_issues",
+  "inference_description": "Busca issues públicas de um repositório GitHub com base em status e rótulo.",
+  "url": "https://api.github.com/repos/microsoft/vscode/issues",
+  "method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "state": {
+        "type": "string",
+        "description": "Filtra issues por estado (open ou closed)",
+        "enum": ["open", "closed"]
+      },
+      "labels": {
+        "type": "string",
+        "description": "Filtra issues por rótulo, ex: bug"
+      }
+    }
+  },
+  "return_type": "string"
+}
