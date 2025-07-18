@@ -56,4 +56,4 @@ Write-Host "🚨 Teste fazendo um commit - você verá os alertas de segurança!
 Write-Host ""
 Write-Host "Para testar:" -ForegroundColor White
 Write-Host "  git add ." -ForegroundColor Gray
-Write-Host "  git commit -m 'test security'" -ForegroundColor Gray
+Write-Host "  git commit -m `"test security`"" -ForegroundColor Gray
