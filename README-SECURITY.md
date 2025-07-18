@@ -6,13 +6,19 @@
 
 ## ⚡ Solução Rápida - Instalar Agora
 
-### 1. Executar Script de Setup (Recomendado)
+### 1. Para Windows PowerShell (Recomendado)
+```powershell
+# Execute no PowerShell
+.\setup-security.ps1
+```
+
+### 2. Para Linux/Mac/WSL
 ```bash
-# No PowerShell ou Terminal
+# Execute no Terminal
 bash setup-security.sh
 ```
 
-### 2. Instalação Manual (Alternativa)
+### 3. Instalação Manual (Alternativa)
 ```bash
 # Instalar pre-commit
 pip install pre-commit
