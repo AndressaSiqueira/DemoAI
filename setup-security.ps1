@@ -26,9 +26,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# Instalar ferramentas de segurança
+# Instalar ferramentas de segurança essenciais
 Write-Host "Instalando ferramentas de segurança..."
-pip install bandit safety gitguardian black flake8
+pip install bandit safety black flake8
 
 if ($LASTEXITCODE -ne 0) {
     Write-Host "ERRO: Falha ao instalar ferramentas de segurança!"
@@ -50,6 +50,13 @@ pre-commit run --all-files
 
 Write-Host ""
 Write-Host "SUCESSO: Configuração completa!"
+Write-Host ""
+Write-Host "Ferramentas instaladas:"
+Write-Host "- Bandit: Scanner de vulnerabilidades Python"
+Write-Host "- Safety: Verificador de dependências"
+Write-Host "- Black: Formatador de código"
+Write-Host "- Flake8: Linter de código"
+Write-Host "- Custom hooks: Validações específicas"
 Write-Host ""
 Write-Host "Agora todas as vulnerabilidades serão detectadas ANTES do commit!"
 Write-Host "Teste fazendo um commit - você verá os alertas de segurança!"
