@@ -1,0 +1,114 @@
+name: 🔒 Security Workflow (Mandatory)
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  security-scan:
+    name: 🔍 Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🔄 Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit[toml] safety pip-audit pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: 🔐 Secret Detection with TruffleHog
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+
+    - name: 🛡️ Security Linting with Bandit
+      run: |
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . -f txt
+      continue-on-error: false
+
+    - name: 🩺 Dependency Vulnerability Scan with Safety
+      run: |
+        # Try safety scan first (newer command), fall back to pip-audit if needed
+        safety scan --json --output safety-report.json || pip install pip-audit && pip-audit --output safety-report.json --format json || true
+        safety scan || pip-audit || true
+      continue-on-error: false
+
+    - name: 📊 Upload Security Reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  code-quality:
+    name: 📝 Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🔄 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black isort mypy
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: 🎯 Code Style Check with Black
+      run: black --check --diff .
+
+    - name: 📏 Import Sorting with isort
+      run: isort --check-only --diff .
+
+    - name: 🔍 Linting with flake8
+      run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: 🔬 Type Checking with mypy
+      run: mypy . --ignore-missing-imports || true
+
+  security-status:
+    name: ✅ Security Status Check
+    needs: [security-scan, code-quality]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: 🔄 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 📋 Check Security Results
+      run: |
+        echo "Security scan completed!"
+        echo "This job serves as a required status check for branch protection."
+        if [ "${{ needs.security-scan.result }}" != "success" ]; then
+          echo "❌ Security scan failed - blocking merge"
+          exit 1
+        fi
+        if [ "${{ needs.code-quality.result }}" != "success" ]; then
+          echo "❌ Code quality checks failed - blocking merge"
+          exit 1
+        fi
+        echo "✅ All security and quality checks passed!"
