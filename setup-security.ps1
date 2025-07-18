@@ -1,60 +1,59 @@
-# 🔒 Setup de Segurança Pré-Commit - DemoAI (Windows PowerShell)
+# Setup de Segurança Pré-Commit - DemoAI (Windows PowerShell)
 # Executa uma única vez para configurar todas as ferramentas
 
-Write-Host "🚀 Configurando ambiente de segurança no Windows..." -ForegroundColor Green
+Write-Host "Configurando ambiente de segurança no Windows..."
 
 # Verificar se Python está instalado
 try {
     $pythonVersion = python --version 2>$null
     if ($pythonVersion) {
-        Write-Host "✅ Python encontrado: $pythonVersion" -ForegroundColor Green
+        Write-Host "Python encontrado: $pythonVersion"
     } else {
         throw "Python não encontrado"
     }
 } catch {
-    Write-Host "❌ Python não encontrado! Instale Python primeiro." -ForegroundColor Red
-    Write-Host "Download: https://python.org/downloads/" -ForegroundColor Yellow
+    Write-Host "ERRO: Python não encontrado! Instale Python primeiro."
+    Write-Host "Download: https://python.org/downloads/"
     exit 1
 }
 
 # Instalar pre-commit
-Write-Host "📦 Instalando pre-commit..." -ForegroundColor Yellow
+Write-Host "Instalando pre-commit..."
 pip install pre-commit
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Erro ao instalar pre-commit!" -ForegroundColor Red
+    Write-Host "ERRO: Falha ao instalar pre-commit!"
     exit 1
 }
 
 # Instalar ferramentas de segurança
-Write-Host "🔧 Instalando ferramentas de segurança..." -ForegroundColor Yellow
+Write-Host "Instalando ferramentas de segurança..."
 pip install bandit safety gitguardian black flake8
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Erro ao instalar ferramentas de segurança!" -ForegroundColor Red
+    Write-Host "ERRO: Falha ao instalar ferramentas de segurança!"
     exit 1
 }
 
 # Instalar hooks
-Write-Host "🔗 Instalando hooks de segurança..." -ForegroundColor Yellow
+Write-Host "Instalando hooks de segurança..."
 pre-commit install
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Erro ao instalar hooks!" -ForegroundColor Red
+    Write-Host "ERRO: Falha ao instalar hooks!"
     exit 1
 }
 
 # Testar configuração
-Write-Host "🧪 Testando configuração..." -ForegroundColor Yellow
+Write-Host "Testando configuração..."
 pre-commit run --all-files
 
 Write-Host ""
-Write-Host "✅ Configuração completa!" -ForegroundColor Green
+Write-Host "SUCESSO: Configuração completa!"
 Write-Host ""
-Write-Host "🎯 Agora todas as vulnerabilidades serão detectadas ANTES do commit!" -ForegroundColor Cyan
-Write-Host "🚨 Teste fazendo um commit - você verá os alertas de segurança!" -ForegroundColor Yellow
+Write-Host "Agora todas as vulnerabilidades serão detectadas ANTES do commit!"
+Write-Host "Teste fazendo um commit - você verá os alertas de segurança!"
 Write-Host ""
-Write-Host "Para testar:" -ForegroundColor White
-Write-Host "  git add ." -ForegroundColor Gray
-$testCommand = "git commit -m " + '"test security"'
-Write-Host "  $testCommand" -ForegroundColor Gray
+Write-Host "Para testar:"
+Write-Host "  git add ."
+Write-Host "  git commit -m test"
