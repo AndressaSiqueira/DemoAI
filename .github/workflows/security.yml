@@ -45,7 +45,7 @@ jobs:
     - name: 🩺 Dependency Vulnerability Scan with Safety
       run: |
         # Try safety scan first (newer command), fall back to pip-audit if needed
-        safety scan --json --output safety-report.json || pip install pip-audit && pip-audit --output safety-report.json --format json || true
+        safety scan --json --output safety-report.json || pip install pip-audit && pip-audit --format json --output safety-report.json || true
         safety scan || pip-audit || true
       continue-on-error: false
 
