@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Security tools
+venv-security/
+.secrets.baseline
+bandit-report.json
+security-report.json
+.pre-commit-cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

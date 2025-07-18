@@ -1,0 +1,26 @@
+{
+  "name": "demoai-security",
+  "version": "1.0.0",
+  "description": "Demo AI project with comprehensive security tools",
+  "main": "index.html",
+  "scripts": {
+    "security-audit": "npm audit --audit-level=high",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "security-check": "python3 security-check.py",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "security",
+    "demo",
+    "ai",
+    "pre-commit"
+  ],
+  "author": "DemoAI Security Team",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-security": "^1.7.1",
+    "eslint-plugin-node": "^11.1.0"
+  }
+}

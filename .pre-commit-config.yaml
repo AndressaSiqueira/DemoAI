@@ -1,0 +1,90 @@
+repos:
+  # Python Security Hooks
+  - repo: https://github.com/PyCQA/bandit
+    rev: '1.7.5'
+    hooks:
+      - id: bandit
+        name: Security scan with bandit
+        args: ['-r', '-x', '*/test_*', '-f', 'json']
+        exclude: ^(tests/|test_)
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+        name: Check for known security vulnerabilities
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect hardcoded secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  # JavaScript/Node.js Security Hooks
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.57.0
+    hooks:
+      - id: eslint
+        name: ESLint security checks
+        additional_dependencies:
+          - eslint-plugin-security@1.7.1
+          - eslint-plugin-node@11.1.0
+        args: [--fix]
+        files: \.(js|jsx|ts|tsx)$
+
+  - repo: local
+    hooks:
+      - id: npm-audit
+        name: NPM security audit
+        entry: npm audit --audit-level=high
+        language: system
+        files: package\.json$
+        pass_filenames: false
+
+  # Generic Security Hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+        name: Check for large files
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-json
+        name: Check JSON syntax
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+
+  # Custom Security Checks
+  - repo: local
+    hooks:
+      - id: custom-security-check
+        name: Custom security validation
+        entry: python security-check.py
+        language: system
+        types: [python, javascript]
+        pass_filenames: true
+
+  # Semgrep Security Analysis
+  - repo: https://github.com/returntocorp/semgrep
+    rev: 'v1.45.0'
+    hooks:
+      - id: semgrep
+        name: Semgrep security scan
+        args: ['--config=auto', '--error', '--strict']
+        exclude: ^(tests/|test_)
+
+  # Additional Python Security
+  - repo: local
+    hooks:
+      - id: pip-check
+        name: Check pip packages for vulnerabilities
+        entry: python -m pip check
+        language: system
+        files: requirements.*\.txt$
+        pass_filenames: false

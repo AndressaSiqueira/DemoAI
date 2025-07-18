@@ -1,0 +1,27 @@
+# Pre-commit framework
+pre-commit==3.5.0
+
+# Python Security Tools
+bandit==1.7.5
+safety==2.3.5
+semgrep==1.45.0
+detect-secrets==1.4.0
+
+# Python code quality and security
+flake8==6.1.0
+flake8-security==1.7.1
+flake8-bandit==4.1.1
+pep8-naming==0.13.3
+
+# Dependency scanning
+pip-audit==2.6.1
+cyclonedx-bom==4.0.4
+
+# Additional security utilities
+requests==2.31.0
+cryptography==41.0.7
+pyyaml==6.0.1
+toml==0.10.2
+
+# JSON and YAML security
+jsonschema==4.19.2
