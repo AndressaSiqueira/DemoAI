@@ -28,7 +28,7 @@ def auth():
 def proxy():
     url = request.args
     
-@app.route('/verify-token', methods=['POST'])
+@app.route('/verify-token2', methods=['POST'])
 def verify_token():
     token = request.json.get('token')
 
